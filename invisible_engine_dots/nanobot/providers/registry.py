@@ -1,4 +1,4 @@
-"""Provider registry: the one provider the Dot's engine speaks to, OpenRouter.
+"""Provider registry for the OpenAI-compatible providers the Dot can use.
 
 ``ProviderSpec`` describes how ``OpenAICompatProvider`` talks to a gateway. No
 credential is ever read from the environment: the key reaches the provider as a
@@ -30,3 +30,11 @@ OPENROUTER = ProviderSpec(
     is_gateway=True,
     supports_prompt_caching=True,
 )
+
+MINIMAX = ProviderSpec(
+    name="minimax",
+    display_name="MiniMax",
+    default_api_base="https://api.minimax.io/v1",
+)
+
+PROVIDERS = {spec.name: spec for spec in (OPENROUTER, MINIMAX)}

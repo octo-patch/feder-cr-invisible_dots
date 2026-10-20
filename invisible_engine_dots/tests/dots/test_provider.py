@@ -33,6 +33,20 @@ def test_the_provider_is_openrouters_with_the_key_the_model_and_the_default_base
     assert provider._default_headers["X-Title"] == "invisible_dots"
 
 
+def test_minimax_uses_its_direct_openai_compatible_endpoint(make_config: MakeConfig) -> None:
+    from nanobot.dots.protocol import parse_runtime_config
+
+    body = make_config({}).model_dump(mode="json")
+    body["model"] = {"provider": "minimax", "id": "MiniMax-M3"}
+    config = parse_runtime_config(body)
+    provider = OpenRouterProviders().current(settings_of(config), "minimax-key")
+
+    assert provider.provider_name == "minimax"
+    assert provider.default_model == "MiniMax-M3"
+    assert provider._effective_base == "https://api.minimax.io/v1"
+    assert "HTTP-Referer" not in provider._default_headers
+
+
 def test_a_stand_in_base_url_is_used_and_gets_no_attribution(make_config: MakeConfig) -> None:
     provider = OpenRouterProviders().current(settings_of(make_config({}), "http://127.0.0.1:9999/api/v1"), "sk-or-1")
 

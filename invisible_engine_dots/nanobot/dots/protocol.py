@@ -288,7 +288,7 @@ class _Open(BaseModel):
 
 
 class ModelConfig(_Open):
-    provider: Literal["openrouter"]
+    provider: Literal["openrouter", "minimax"]
     id: NonEmptyStr
 
 
