@@ -10,11 +10,11 @@ from __future__ import annotations
 
 from nanobot.dots.projection import EngineSettings
 from nanobot.providers.openai_compat_provider import OpenAICompatProvider
-from nanobot.providers.registry import OPENROUTER, PROVIDERS
+from nanobot.providers.registry import OPENROUTER
 
 
 class OpenRouterProviders:
-    """Hands out a configured OpenAI-compatible provider for the current Dot."""
+    """Hands out the OpenRouter provider for the current key and settings."""
 
     def __init__(self) -> None:
         self._identity: tuple[str, str, str | None] | None = None
@@ -22,18 +22,14 @@ class OpenRouterProviders:
 
     def current(self, settings: EngineSettings, key: str) -> OpenAICompatProvider:
         """The provider for `key`, the model and the base URL of `settings`; the same object while they hold."""
-        spec = PROVIDERS.get(settings.provider_name)
-        if spec is None:
-            raise ValueError(f"unsupported provider: {settings.provider_name}")
-        base_url = settings.openrouter_base_url if spec is OPENROUTER else None
-        identity = (key, settings.provider_name, settings.model_id, base_url)
+        identity = (key, settings.model_id, settings.openrouter_base_url)
         if self._provider is None or identity != self._identity:
             self._provider = OpenAICompatProvider(
                 api_key=key,
-                api_base=base_url or spec.default_api_base,
+                api_base=settings.openrouter_base_url,
                 default_model=settings.model_id,
-                spec=spec,
-                provider_name=spec.name,
+                spec=OPENROUTER,
+                provider_name=OPENROUTER.name,
             )
             self._identity = identity
         return self._provider

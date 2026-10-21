@@ -282,6 +282,12 @@ from one of three presets:
 | Balanced | The defaults: works freely on its own computer, and asks before it deletes a browser identity or adds an automation. |
 | Autonomous | Never asks, except before it deletes a browser identity. |
 
+The Brain model field suggests MiniMax M3.1 Flash (`minimax/minimax-m3.1-flash:free`)
+first among MiniMax models, followed by M3 (`minimax/minimax-m3`). These use the
+stored OpenRouter key and `model.provider: openrouter`. You can still type any
+model ID, including an older MiniMax model; editing a Dot keeps its saved ID.
+The engine reads each model's current limits and reported cost from OpenRouter.
+
 **The Inbox** is everything that needs you, from every Dot: the approvals that
 wait (the one that has waited longest first), a Dot in an error state, a task
 that failed in the last 24 hours, and a channel that has to be linked again. An

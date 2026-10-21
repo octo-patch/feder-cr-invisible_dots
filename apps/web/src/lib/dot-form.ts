@@ -33,7 +33,11 @@ export function gibSize(gib: number): string {
 export const DEFAULT_MODEL_ID = "z-ai/glm-5.3-flash";
 
 /** What the model field suggests; any OpenRouter model id may be typed instead. */
-export const MODEL_SUGGESTIONS: readonly string[] = [DEFAULT_MODEL_ID];
+export const MODEL_SUGGESTIONS: readonly string[] = [
+  DEFAULT_MODEL_ID,
+  "minimax/minimax-m3.1-flash:free",
+  "minimax/minimax-m3",
+];
 
 export interface IdleChoice {
   value: string;

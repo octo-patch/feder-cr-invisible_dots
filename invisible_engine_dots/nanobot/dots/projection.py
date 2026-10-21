@@ -14,7 +14,6 @@ from nanobot.dots.protocol import MODEL_ROLES, DotRuntimeConfig
 
 @dataclass(frozen=True)
 class EngineSettings:
-    provider_name: str
     model_id: str
     # The models the config names for the jobs other than the turn itself, as (role, model id) pairs in
     # role order (MODEL_ROLES); a tuple, as the settings are hashable.
@@ -44,7 +43,6 @@ def project(config: DotRuntimeConfig, *, workspace: str, openrouter_base_url: st
     offered = offered_tools(config.permissions)
     named = config.models or {}
     return EngineSettings(
-        provider_name=config.model.provider,
         model_id=config.model.id,
         models=tuple((role, named[role]) for role in MODEL_ROLES if role in named),
         openrouter_base_url=(openrouter_base_url or "").strip() or None,

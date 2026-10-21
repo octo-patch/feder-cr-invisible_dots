@@ -6,6 +6,7 @@ import {
   DEFAULT_MODEL_ID,
   emptyForm,
   FORM_BOUNDS,
+  MODEL_SUGGESTIONS,
   formIssues,
   formToConfig,
   formToYaml,
@@ -46,6 +47,31 @@ describe("the empty form", () => {
     expect(formIssues(filled({ cpu: 17 })).map((i) => i.field)).toEqual(["cpu"]);
     expect(formIssues(filled({ maxCostUsd: 0 })).map((i) => i.field)).toEqual(["maxCostUsd"]);
     expect(formIssues(filled({ maxCostUsd: 100.5 })).map((i) => i.field)).toEqual(["maxCostUsd"]);
+  });
+});
+
+describe("MiniMax model suggestions", () => {
+  it("suggests Flash before M3 while keeping the existing default", () => {
+    expect(MODEL_SUGGESTIONS.filter((id) => id.startsWith("minimax/"))).toEqual([
+      "minimax/minimax-m3.1-flash:free",
+      "minimax/minimax-m3",
+    ]);
+    expect(emptyForm().modelId).toBe(DEFAULT_MODEL_ID);
+    expect(MODEL_SUGGESTIONS[0]).toBe(DEFAULT_MODEL_ID);
+  });
+
+  it.each([
+    "minimax/minimax-m3.1-flash:free",
+    "minimax/minimax-m3",
+    "minimax/minimax-m2.7",
+    "custom/model",
+    DEFAULT_MODEL_ID,
+  ])("keeps %s through config and YAML round trips", (modelId) => {
+    const form = filled({ modelId, summaryModelId: modelId });
+    const config = parseDotConfig(formToConfig(form));
+    expect(config.model).toEqual({ provider: "openrouter", id: modelId });
+    expect(configToForm(config)).toEqual(form);
+    expect(yamlToForm(formToYaml(form))).toEqual({ ok: true, form });
   });
 });
 
